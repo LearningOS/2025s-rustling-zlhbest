@@ -1,12 +1,37 @@
 /*
-	sort
-	This problem requires you to implement a sorting algorithm
-	you can use bubble sorting, insertion sorting, heap sorting, etc.
+    sort
+    This problem requires you to implement a sorting algorithm
+    you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
 
-fn sort<T>(array: &mut [T]){
-	//TODO
+fn sort<T: PartialOrd>(array: &mut [T]) {
+    //TODO
+    if array.len() > 1 {
+        quick_sort(array, 0, array.len() - 1);
+    }
+}
+fn quick_sort<T: PartialOrd>(array: &mut [T], start: usize, end: usize) {
+    // 快排就是分级处理
+    let (mut left, mut right) = (start, end);
+    let base = start;
+    while left < right {
+        while array[left] <= array[base] && left < right {
+            left += 1;
+        }
+        // 找到比base大的数字
+        array.swap(left, right);
+
+        while array[right] >= array[base] && left <= right {
+            right -= 1;
+        }
+        array.swap(right, base);
+    }
+    if left - 1 > start {
+        quick_sort(array, start, left - 1);
+    }
+    if right + 1 < end {
+        quick_sort(array, right + 1, end);
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -18,13 +43,13 @@ mod tests {
         sort(&mut vec);
         assert_eq!(vec, vec![19, 37, 46, 57, 64, 73, 75, 91]);
     }
-	#[test]
+    #[test]
     fn test_sort_2() {
         let mut vec = vec![1];
         sort(&mut vec);
         assert_eq!(vec, vec![1]);
     }
-	#[test]
+    #[test]
     fn test_sort_3() {
         let mut vec = vec![99, 88, 77, 66, 55, 44, 33, 22, 11];
         sort(&mut vec);
